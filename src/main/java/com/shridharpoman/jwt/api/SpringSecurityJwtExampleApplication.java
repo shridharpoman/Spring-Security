@@ -11,6 +11,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +41,15 @@ public class SpringSecurityJwtExampleApplication {
           userService.saveUser(new User(4,"patil","pa444ss","spoman3@gmail.com",new ArrayList<>()));
 
           userService.addRoleToUser("spoman@gmail.com","ROLE_ADMIN");
-            userService.addRoleToUser("spoman@gmail.com","ROLE_SUPER_ADMIN");
-            userService.addRoleToUser("spoman@gmail.com","ROLE_USER");
-            userService.addRoleToUser("spoman1@gmail.com","ROLE_USER");
+          userService.addRoleToUser("spoman@gmail.com","ROLE_SUPER_ADMIN");
+          userService.addRoleToUser("spoman@gmail.com","ROLE_USER");
+          userService.addRoleToUser("spoman1@gmail.com","ROLE_USER");
         };
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
