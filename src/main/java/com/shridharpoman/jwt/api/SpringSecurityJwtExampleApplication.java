@@ -28,6 +28,7 @@ public class SpringSecurityJwtExampleApplication {
         SpringApplication.run(SpringSecurityJwtExampleApplication.class, args);
     }
 
+
     @Bean
     CommandLineRunner run(UserService userService){
         return args -> {
@@ -51,5 +52,6 @@ public class SpringSecurityJwtExampleApplication {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 }
