@@ -1,9 +1,13 @@
 package com.shridharpoman.jwt.api.config;
 
+import com.shridharpoman.jwt.api.filter.CustomAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,10 +15,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +29,12 @@ public class SecurityConfig {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(bCryptPasswordEncoder);
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
@@ -40,10 +50,18 @@ public class SecurityConfig {
       http.csrf(csrf -> csrf.disable())
                .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                .authorizeHttpRequests(auth-> auth.anyRequest().permitAll())
-              .authenticationProvider(authenticationProvider());
-//               .addFilter(null);
+              .authenticationProvider(authenticationProvider())
+               .addFilter(new CustomAuthFilter(authenticationManager()));
 
 //        http.authenticationProvider(authenticationProvider());
         return http.build();
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager()  {
+        List<AuthenticationProvider> providers = new ArrayList<>();
+        providers.add(authenticationProvider());
+        return new ProviderManager(providers);
+    }
+
 }
