@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -47,13 +48,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        CustomAuthFilter customAuthFilter = new CustomAuthFilter(authenticationManager());
+        customAuthFilter.setFilterProcessesUrl("/api/login");
       http.csrf(csrf -> csrf.disable())
                .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-               .authorizeHttpRequests(auth-> auth.anyRequest().permitAll())
+              .authorizeHttpRequests(auth-> auth.requestMatchers("/api/login/**").permitAll())
+              .authorizeHttpRequests(auth-> auth.requestMatchers(HttpMethod.GET,"/api/user/**").hasAnyAuthority("ROLE_USER"))
+              .authorizeHttpRequests(auth-> auth.requestMatchers(HttpMethod.POST,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN"))
+              .authorizeHttpRequests(auth-> auth.anyRequest().authenticated())
               .authenticationProvider(authenticationProvider())
-               .addFilter(new CustomAuthFilter(authenticationManager()));
+               .addFilter(customAuthFilter);
 
-//        http.authenticationProvider(authenticationProvider());
         return http.build();
     }
 
