@@ -1,6 +1,6 @@
 package com.shridharpoman.jwt.api.config;
 
-import com.shridharpoman.jwt.api.filter.CustomAuthFilter;
+import com.shridharpoman.jwt.api.filter.CustomAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -48,8 +48,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        CustomAuthFilter customAuthFilter = new CustomAuthFilter(authenticationManager());
-        customAuthFilter.setFilterProcessesUrl("/api/login");
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
       http.csrf(csrf -> csrf.disable())
                .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .authorizeHttpRequests(auth-> auth.requestMatchers("/api/login/**").permitAll())
@@ -57,7 +57,7 @@ public class SecurityConfig {
               .authorizeHttpRequests(auth-> auth.requestMatchers(HttpMethod.POST,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN"))
               .authorizeHttpRequests(auth-> auth.anyRequest().authenticated())
               .authenticationProvider(authenticationProvider())
-               .addFilter(customAuthFilter);
+               .addFilter(customAuthenticationFilter);
 
         return http.build();
     }
