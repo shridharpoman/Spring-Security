@@ -1,6 +1,7 @@
 package com.shridharpoman.jwt.api.config;
 
 import com.shridharpoman.jwt.api.filter.CustomAuthenticationFilter;
+import com.shridharpoman.jwt.api.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +59,8 @@ public class SecurityConfig {
               .authorizeHttpRequests(auth-> auth.requestMatchers(HttpMethod.POST,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN"))
               .authorizeHttpRequests(auth-> auth.anyRequest().authenticated())
               .authenticationProvider(authenticationProvider())
-               .addFilter(customAuthenticationFilter);
+               .addFilter(customAuthenticationFilter)
+              .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
