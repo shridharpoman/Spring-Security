@@ -45,6 +45,7 @@ public class SpringSecurityJwtExampleApplication {
           userService.addRoleToUser("spoman@gmail.com","ROLE_SUPER_ADMIN");
           userService.addRoleToUser("spoman@gmail.com","ROLE_USER");
           userService.addRoleToUser("spoman1@gmail.com","ROLE_USER");
+          userService.addRoleToUser("spoman3@gmail.com","ROLE_USER");
         };
     }
 

@@ -2,6 +2,7 @@ package com.shridharpoman.jwt.api.controller;
 
 import com.shridharpoman.jwt.api.entity.Role;
 import com.shridharpoman.jwt.api.entity.User;
+import com.shridharpoman.jwt.api.repository.UserProjection;
 import com.shridharpoman.jwt.api.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>>getUsers(){
-        return ResponseEntity.ok().body(userService.getUsers());
+    public ResponseEntity<List<UserProjection>>getLimitedUserFields(){
+        return ResponseEntity.ok().body(userService.getLimitedUserFields());
     }
 
     @PostMapping("/user/save")

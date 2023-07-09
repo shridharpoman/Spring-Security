@@ -3,6 +3,7 @@ package com.shridharpoman.jwt.api.service;
 import com.shridharpoman.jwt.api.entity.Role;
 import com.shridharpoman.jwt.api.entity.User;
 import com.shridharpoman.jwt.api.repository.RoleRepository;
+import com.shridharpoman.jwt.api.repository.UserProjection;
 import com.shridharpoman.jwt.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +75,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<UserProjection> getLimitedUserFields() {
+        return userRepository.findAllProjectedBy();
     }
 
 }
