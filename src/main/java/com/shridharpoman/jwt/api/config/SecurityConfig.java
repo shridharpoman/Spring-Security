@@ -54,7 +54,7 @@ public class SecurityConfig {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
       http.csrf(csrf -> csrf.disable())
                .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-              .authorizeHttpRequests(auth-> auth.requestMatchers("/api/login/**").permitAll())
+              .authorizeHttpRequests(auth-> auth.requestMatchers("/api/login/**","/api/token/refresh/**").permitAll())
               .authorizeHttpRequests(auth-> auth.requestMatchers(HttpMethod.GET,"/api/user/**").hasAnyAuthority("ROLE_USER"))
               .authorizeHttpRequests(auth-> auth.requestMatchers(HttpMethod.POST,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN"))
               .authorizeHttpRequests(auth-> auth.anyRequest().authenticated())
