@@ -1,9 +1,11 @@
 package com.shridharpoman.jwt.api.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.shridharpoman.jwt.api.entity.Role;
 import com.shridharpoman.jwt.api.entity.User;
 import com.shridharpoman.jwt.api.repository.UserProjection;
 import com.shridharpoman.jwt.api.service.UserService;
+import com.shridharpoman.jwt.api.util.Views;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getLimitedUserFields());
     }
 
-    @PostMapping("/user/save")
+    @PostMapping("/user/save") @JsonView(Views.Public.class)
     public ResponseEntity<User>saveUser(@RequestBody User user){
         //indication that a new user resource has been created and provide the URI for accessing that resource in the response headers
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());

@@ -29,7 +29,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     private final AuthenticationManager authenticationManager;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager){
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
@@ -60,8 +60,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algo);
 
-//        response.setHeader("access_token",access_token);
-//        response.setHeader("refresh_token",refresh_token);
+//
         Map<String,String> token = new HashMap<>();
         token.put("access_token",access_token);
         token.put("refresh_token",refresh_token);
